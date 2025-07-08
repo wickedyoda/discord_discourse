@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      DISCOURSE_BASE_URL: ${DISCOURSE_BASE_URL:-https://forum.gl-inet.com}
+    restart: unless-stopped
