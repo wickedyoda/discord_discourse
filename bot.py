@@ -9,11 +9,12 @@ intents = discord.Intents.default()
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-SEARCH_URL = 'https://forum.gl-inet.com/search.json'
+BASE_URL = os.getenv("DISCOURSE_BASE_URL", "https://forum.gl-inet.com").rstrip("/")
+SEARCH_URL = f"{BASE_URL}/search.json"
 
 @bot.command(name='search')
 async def search(ctx, *, query: str):
-    """Search the GL.iNet forum and return top 5 results."""
+    """Search the configured Discourse forum and return top 5 results."""
     params = {'q': query}
     try:
         r = requests.get(SEARCH_URL, params=params)
@@ -29,7 +30,7 @@ async def search(ctx, *, query: str):
         title = topic.get('title')
         slug = topic.get('slug')
         id_ = topic.get('id')
-        url = f'https://forum.gl-inet.com/t/{slug}/{id_}'
+        url = f"{BASE_URL}/t/{slug}/{id_}"
         results.append(f'{title} - {url}')
 
     if results:
