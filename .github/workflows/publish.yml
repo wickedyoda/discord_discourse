@@ -29,4 +29,4 @@ jobs:
         with:
           user: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          repository-url: https://pypi.pkg.github.com/${{ github.repository_owner }}
+          repository-url: https://upload.pypi.pkg.github.com/${{ github.repository_owner }}
