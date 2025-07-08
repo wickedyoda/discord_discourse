@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "discord-discourse"
+version = "0.1.0"
+description = "A Discord bot that searches a Discourse forum"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+authors = [{name = "WickedYoda"}]
+dependencies = [
+    "discord.py==2.3.2",
+    "requests"
+]
+
+[tool.setuptools]
+py-modules = ["bot"]
