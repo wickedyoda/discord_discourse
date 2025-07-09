@@ -1,6 +1,15 @@
-FROM python:3.12-slim
+# Use official Python image
+FROM python:3.11-slim
+
+# Set working directory
 WORKDIR /app
-COPY requirements.txt ./
+
+# Install required libraries
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY bot.py ./
+
+# Copy the bot source code
+COPY . .
+
+# Run the bot
 CMD ["python", "bot.py"]
