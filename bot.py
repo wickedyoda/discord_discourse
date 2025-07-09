@@ -57,4 +57,12 @@ async def on_ready():
     except Exception as e:
         print("Failed to sync slash commands:", e)
 
+@bot.event
+async def on_ready():
+    try:
+        synced = await tree.sync(guild=discord.Object(id=GUILD_ID))
+        print(f"✅ Synced {len(synced)} command(s) to guild ID {GUILD_ID}")
+    except Exception as e:
+        print("❌ Failed to sync slash commands:", e)
+
 bot.run(TOKEN)
