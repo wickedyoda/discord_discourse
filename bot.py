@@ -30,11 +30,6 @@ def search_forum(query):
             top_links.append(f"https://forum.glinet.net{link}")
     return top_links if top_links else ["No results found."]
 
-@bot.event
-async def on_ready():
-    await tree.sync(guild=discord.Object(id=GUILD_ID))
-    print(f"Bot logged in as {bot.user} and slash commands synced.")
-
 # Prefix-based command
 @bot.command(name="search")
 async def search_prefix(ctx, *, query: str):
@@ -43,11 +38,21 @@ async def search_prefix(ctx, *, query: str):
     await ctx.send("\n".join(results))
 
 # Slash command
-@tree.command(name="search", description="Search GL.iNet Forum")
+@tree.command(name="search", description="Search GL.iNet Forum", guild=discord.Object(id=GUILD_ID))
 @app_commands.describe(query="Enter search keywords")
 async def search_slash(interaction: discord.Interaction, query: str):
     await interaction.response.defer()
     results = search_forum(query)
     await interaction.followup.send("\n".join(results), ephemeral=True)
+
+# ✅ Proper single on_ready
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    try:
+        synced = await tree.sync(guild=discord.Object(id=GUILD_ID))
+        print(f"Synced {len(synced)} command(s) to the guild.")
+    except Exception as e:
+        print("Failed to sync slash commands:", e)
 
 bot.run(TOKEN)
