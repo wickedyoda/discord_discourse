@@ -17,18 +17,31 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
 
+# Public message
+@tree.command(name="search", description="Search GL.iNet Forum")
+@app_commands.describe(query="Enter search keywords")
+async def search_slash(interaction: discord.Interaction, query: str):
+    await interaction.response.defer()
+    results = search_forum(query)
+    await interaction.followup.send("\n".join(results))  
+
 # Function to search forum
 def search_forum(query):
     url = f"https://forum.glinet.net/search?q={query}"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    results = soup.select('.topic-title')
-    top_links = []
-    for result in results[:5]:
-        link = result.get('href')
-        if link:
-            top_links.append(f"https://forum.glinet.net{link}")
-    return top_links if top_links else ["No results found."]
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        results = soup.select('.topic-title')
+        top_links = []
+        for result in results[:5]:
+            link = result.get('href')
+            if link:
+                top_links.append(f"https://forum.glinet.net{link}")
+        return top_links if top_links else ["No results found."]
+    except requests.exceptions.RequestException as e:
+        print(f"Search error: {e}")
+        return ["⚠️ Failed to retrieve search results. Try again later."]
 
 # Prefix-based command
 @bot.command(name="search")
