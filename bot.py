@@ -21,16 +21,21 @@ guild = discord.Object(id=GUILD_ID)
 
 # Search the GL.iNet forum
 def search_forum(query):
-    url = f"https://forum.gl-inet.com/search?q={query}"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    results = soup.select('.topic-title')
-    top_links = []
-    for result in results[:5]:
-        link = result.get('href')
-        if link:
-            top_links.append(f"https://forum.gl-inet.com{link}")
-    return top_links if top_links else ["No results found."]
+    url = f"https://forum.gl-inet.com/search.json?q={query}"
+    try:
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        results = data.get("topics", [])
+        top_links = []
+        for topic in results[:5]:
+            topic_id = topic.get("id")
+            slug = topic.get("slug")
+            if topic_id and slug:
+                top_links.append(f"https://forum.gl-inet.com/t/{slug}/{topic_id}")
+        return top_links if top_links else ["No results found."]
+    except Exception as e:
+        print(f"Error searching forum: {e}")
+        return ["❌ Failed to fetch results."]
 
 # Slash command (must be defined before on_ready)
 @tree.command(name="search", description="Search GL.iNet Forum", guild=guild)
