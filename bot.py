@@ -21,7 +21,7 @@ guild = discord.Object(id=GUILD_ID)
 
 # Search the GL.iNet forum
 def search_forum(query):
-    url = f"https://forum.glinet.net/search?q={query}"
+    url = f"https://forum.gl-inet.com/search?q={query}"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     results = soup.select('.topic-title')
@@ -29,7 +29,7 @@ def search_forum(query):
     for result in results[:5]:
         link = result.get('href')
         if link:
-            top_links.append(f"https://forum.glinet.net{link}")
+            top_links.append(f"https://forum.gl-inet.com{link}")
     return top_links if top_links else ["No results found."]
 
 # Slash command (must be defined before on_ready)
