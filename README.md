@@ -12,6 +12,7 @@ A simple Discord bot that searches the [GL.iNet forum](https://forum.gl-inet.com
    forum you want to search (defaults to `https://forum.gl-inet.com`).
 4. Start the bot using Docker:
 
+
 ```bash
 docker build -t discord-discourse .
 docker run -e DISCORD_TOKEN=YOUR_TOKEN \
