@@ -5,7 +5,9 @@ A simple Discord bot that searches the [GL.iNet forum](https://forum.gl-inet.com
 ## Usage
 
 1. Create a Discord bot token and invite the bot to your server.
-2. Set the `DISCORD_TOKEN` environment variable to your bot token.
+2. Set the `DISCORD_TOKEN` environment variable to your bot token. The bot
+   requires the Message Content intent to be enabled in the Discord developer
+   portal.
 3. Optionally set `DISCOURSE_BASE_URL` to the base URL of the Discourse
    forum you want to search (defaults to `https://forum.gl-inet.com`).
 4. Start the bot using Docker:
