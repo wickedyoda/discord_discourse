@@ -18,7 +18,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
 
-# Function to search the GL.iNet forum
+# Forum search function
 def search_forum(query):
     url = f"https://forum.glinet.net/search?q={query}"
     response = requests.get(url)
@@ -31,14 +31,13 @@ def search_forum(query):
             top_links.append(f"https://forum.glinet.net{link}")
     return top_links if top_links else ["No results found."]
 
-@bot.event
-async def on_ready():
-    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    try:
-        synced = await tree.sync(guild=discord.Object(id=GUILD_ID))
-        print(f"Synced {len(synced)} command(s) to the guild.")
-    except Exception as e:
-        print("Failed to sync slash commands:", e)
+# Slash command
+@tree.command(name="search", description="Search GL.iNet Forum")
+@app_commands.describe(query="Enter search keywords")
+async def search_slash(interaction: discord.Interaction, query: str):
+    await interaction.response.defer()
+    results = search_forum(query)
+    await interaction.followup.send("\n".join(results), ephemeral=False)  # public reply
 
 # Prefix-based command
 @bot.command(name="search")
@@ -47,12 +46,15 @@ async def search_prefix(ctx, *, query: str):
     results = search_forum(query)
     await ctx.send("\n".join(results))
 
-# Slash command
-@tree.command(name="search", description="Search GL.iNet Forum")
-@app_commands.describe(query="Enter search keywords")
-async def search_slash(interaction: discord.Interaction, query: str):
-    await interaction.response.defer()
-    results = search_forum(query)
-    await interaction.followup.send("\n".join(results), ephemeral=False)  # Public response
+# Sync and launch
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
+    try:
+        guild = discord.Object(id=GUILD_ID)
+        synced = await tree.sync(guild=guild)
+        print(f"Synced {len(synced)} command(s) to the guild.")
+    except Exception as e:
+        print("Failed to sync slash commands:", e)
 
 bot.run(TOKEN)
