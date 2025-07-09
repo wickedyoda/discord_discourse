@@ -1,16 +1,13 @@
-# Use official Python image
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Install required libraries
-COPY requirements.txt .
-RUN pip install beautifulsoup4
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the bot source code
+# If not using a requirements.txt:
+# RUN pip install discord.py beautifulsoup4 requests
+
 COPY . .
 
-# Run the bot
 CMD ["python", "bot.py"]
