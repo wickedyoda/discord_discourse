@@ -1,8 +1,12 @@
 services:
   discord_discourse:
-    image: ghcr.io/wickedyoda/discord_discourse:latest
     container_name: discord_discourse
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/arm64
+    image: discord_discourse:local
     restart: unless-stopped
     env_file:
       - .env
-    pull_policy: always
