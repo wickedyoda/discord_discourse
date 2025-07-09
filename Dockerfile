@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Install required libraries
 COPY requirements.txt .
+RUN pip install beautifulsoup4
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the bot source code
