@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -20,20 +21,15 @@ tree = bot.tree
 # Function to search the GL.iNet forum
 def search_forum(query):
     url = f"https://forum.glinet.net/search?q={query}"
-    headers = {"User-Agent": "Mozilla/5.0"}
-    try:
-        response = requests.get(url, headers=headers, timeout=10)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        results = soup.select('.topic-title')
-        top_links = []
-        for result in results[:5]:
-            link = result.get('href')
-            if link:
-                top_links.append(f"https://forum.glinet.net{link}")
-        return top_links if top_links else ["🔍 No results found."]
-    except Exception as e:
-        print("Error fetching search results:", e)
-        return ["⚠️ Failed to retrieve results. Please try again later."]
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    results = soup.select('.topic-title')
+    top_links = []
+    for result in results[:5]:
+        link = result.get('href')
+        if link:
+            top_links.append(f"https://forum.glinet.net{link}")
+    return top_links if top_links else ["No results found."]
 
 @bot.event
 async def on_ready():
@@ -44,19 +40,19 @@ async def on_ready():
     except Exception as e:
         print("Failed to sync slash commands:", e)
 
-# Prefix command for legacy support
+# Prefix-based command
 @bot.command(name="search")
 async def search_prefix(ctx, *, query: str):
     await ctx.send("🔍 Searching forum...")
     results = search_forum(query)
     await ctx.send("\n".join(results))
 
-# Slash command for modern interaction
+# Slash command
 @tree.command(name="search", description="Search GL.iNet Forum")
 @app_commands.describe(query="Enter search keywords")
 async def search_slash(interaction: discord.Interaction, query: str):
     await interaction.response.defer()
     results = search_forum(query)
-    await interaction.followup.send("\n".join(results), ephemeral=False)  # Public to everyone
+    await interaction.followup.send("\n".join(results), ephemeral=False)  # Public response
 
 bot.run(TOKEN)
