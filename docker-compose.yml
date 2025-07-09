@@ -1,9 +1,8 @@
-version: "3.9"
-
 services:
-  bot:
-    build: .
-    environment:
-      DISCORD_TOKEN: ${DISCORD_TOKEN}
-      DISCOURSE_BASE_URL: ${DISCOURSE_BASE_URL:-https://forum.gl-inet.com}
+  discord_discourse:
+    image: ghcr.io/wickedyoda/discord_discourse:latest
+    container_name: discord_discourse
     restart: unless-stopped
+    env_file:
+      - .env
+    pull_policy: always
