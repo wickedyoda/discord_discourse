@@ -1,76 +1,119 @@
-# 🔍 Search Bot for GL.iNet Forum
+# 🔗 Link – Discord Search Bot for GL.iNet Forum
 
-**Search Bot** is a lightweight Discord bot that allows users to search the [GL.iNet Forum](https://forum.glinet.net) directly from Discord using a simple slash command or a traditional `!search` command. It responds with the top 5 discussion threads matching your search query.
-
----
-
-## ✨ Features
-
-- `/search [keywords]`: Publicly returns top 5 search results from the GL.iNet forum.
-- `!search [keywords]`: Legacy command prefix support.
-- Built with Python and Discord API.
-- Docker-ready for simple deployment.
+**Link** is a simple, containerized Discord bot that allows users to search the [GL.iNet Community Forum](https://forum.gl-inet.com/) using either slash commands (`/search`) or the traditional `!search` prefix.
 
 ---
 
-## 📂 Project Structure
+## 💡 Features
 
-.
-├── bot.py               # Main bot logic
-├── Dockerfile           # Docker build file
-├── requirements.txt     # Python dependencies
-├── docker-compose.yml   # Compose config (pulls built image)
-└── .env                 # Environment variables (not committed)
+- 🔍 Search GL.iNet’s official forum from Discord.
+- 💬 Supports both `/search` slash command and `!search` prefix command.
+- 🔗 Returns top 5 relevant results with clickable links.
+- 🐳 Docker-ready with GitHub container image.
+- 🔧 Easy deployment via `.env` file or Docker Compose.
+- 🎯 Designed for use in GL.iNet-related Discord servers.
 
 ---
 
-## ⚙️ Environment Variables
+## 🛠 Setup & Configuration
 
-Create a `.env` file in the root of the project with the following content:
+### 1. Create a `.env` file
+Place this in the project root:
 
 ```env
 DISCORD_TOKEN=your_discord_bot_token
 GUILD_ID=your_discord_server_id
+```
 
-🐳 Docker Deployment
+### 2. Docker Compose (Optional)
+You can deploy using Docker Compose:
 
-This bot is designed to run inside a container using a prebuilt image hosted at:
-ghcr.io/wickedyoda/discord_discourse:latest
+```yaml
+version: "3.8"
 
-To deploy using Docker Compose:
+services:
+  discord_discourse:
+    image: ghcr.io/wickedyoda/discord_discourse:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+```
+
+Run it with:
+
+```bash
 docker compose up -d
+```
 
-Ensure your .env file is in the same directory as docker-compose.yml.
+---
 
-✅ Discord Bot Setup
-	1.	Go to the Discord Developer Portal.
-	2.	Create a new application or select your existing bot.
-	3.	Enable the following OAuth2 Scopes:
-	•	bot
-	•	applications.commands
-	4.	Set permissions to include:
-	•	Send Messages
-	•	Read Message History
-	•	Use Slash Commands
-	5.	Use the OAuth2 URL to invite the bot to your server:
-      https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=2416004096&scope=bot+applications.commands
+## 🤖 Bot Commands
 
+### `/search [query]`
+Search the GL.iNet forum using a slash command.
 
-🔎 Example Commands
-	•	/search vpn
-	•	!search firmware upgrade
+- Example: `/search wireguard`
 
-⸻
+### `!search [query]`
+Classic text-based command (works in any channel where the bot has permissions).
 
-📦 Image Repository
+- Example: `!search repeater mode`
 
-This bot is built and pushed automatically via GitHub Actions to:
-	•	GHCR: ghcr.io/wickedyoda/discord_discourse
+---
 
-⸻
+## 🚀 Discord Bot Invite
 
-📬 Support
+Use this link to invite the bot to your server:
 
-Need help? Join the Wicked Discord Link community here:
+👉 [Invite Link](https://discord.com/oauth2/authorize?client_id=1392251842343206963&permissions=2416004096&scope=bot+applications.commands)
 
-🔗 https://discord.gg/m6UjX6UhKe
+---
+
+## 🧠 How It Works
+
+- Uses the Discourse JSON API (`/search.json`) from [forum.gl-inet.com](https://forum.gl-inet.com/).
+- Parses search results and formats clickable topic links.
+- Supports ephemeral (private) or public responses.
+
+---
+
+## 🔒 Permissions Needed
+
+To function properly, ensure the bot has the following Discord permissions:
+- `Read Messages/View Channels`
+- `Send Messages`
+- `Use Slash Commands`
+- `Embed Links`
+- (Optional) `Manage Messages` (for future features)
+
+---
+
+## 🐳 Docker Notes
+
+If you're building the container manually:
+
+```bash
+docker build -t discord_discourse .
+docker run --env-file .env discord_discourse
+```
+
+To run it cross-platform (including ARM64), ensure your image is built using multi-arch in GitHub Actions or locally using `buildx`.
+
+---
+
+## 📝 Credits
+
+- Built by [WickedYoda](https://wickedyoda.com)
+- Uses: [`discord.py`](https://discordpy.readthedocs.io/), [`requests`](https://docs.python-requests.org/), [`bs4`](https://www.crummy.com/software/BeautifulSoup/)
+
+---
+
+## 🔗 Related
+
+- [GL.iNet Forum](https://forum.gl-inet.com/)
+- [Bot Repository](https://github.com/wickedyoda/discord_discourse)
+- [WickedYoda Discord](https://discord.gg/m6UjX6UhKe)
+
+---
+
+Let us know if you need help! Join the community and open an issue or feature request. 👾
